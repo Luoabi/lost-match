@@ -66,20 +66,22 @@
             <span class="menu-title">内容审核</span>
           </template>
         </el-menu-item>
-        
-        <el-menu-item index="/logs" class="menu-item-custom">
+        <!-- 不需要了 -->
+        <!--
+         <el-menu-item index="/logs" class="menu-item-custom">
           <el-icon><Document /></el-icon>
           <template #title>
             <span class="menu-title">操作日志</span>
           </template>
-        </el-menu-item>
+        </el-menu-item> -->
+        <!-- 不需要了 -->
         
-        <el-menu-item index="/statistics" class="menu-item-custom">
+        <!-- <el-menu-item index="/statistics" class="menu-item-custom">
           <el-icon><DataAnalysis /></el-icon>
           <template #title>
             <span class="menu-title">数据统计</span>
           </template>
-        </el-menu-item>
+        </el-menu-item> -->
         
         <el-menu-item index="/settings" class="menu-item-custom">
           <el-icon><Setting /></el-icon>
