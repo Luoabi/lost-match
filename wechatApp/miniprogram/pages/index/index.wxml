@@ -1,0 +1,146 @@
+<view class="container">
+  <!-- 下拉刷新 -->
+  <scroll-view class="scroll-container" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onRefresh">
+  <!-- 顶部横幅 -->
+  <view class="header-banner">
+    <view class="banner-content">
+      <view class="banner-title">校园失物追寻</view>
+      <view class="banner-subtitle">
+        <text class="subtitle-icon">🤖</text>
+        <text>AI智能匹配 · 让失物回家</text>
+      </view>
+      <view class="banner-features">
+        <view class="feature-item">
+          <text class="feature-icon">📸</text>
+          <text class="feature-text">图像识别</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">📍</text>
+          <text class="feature-text">位置匹配</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">💬</text>
+          <text class="feature-text">文本分析</text>
+        </view>
+      </view>
+    </view>
+    <view class="banner-decoration">
+      <text class="decoration-icon">🎯</text>
+      <view class="decoration-circle"></view>
+    </view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-section">
+    <view class="stat-card" bindtap="onViewMoreLost">
+      <view class="stat-icon">📋</view>
+      <view class="stat-info">
+        <view class="stat-value">{{stats.totalLost}}</view>
+        <view class="stat-label">失物</view>
+      </view>
+    </view>
+    <view class="stat-card" bindtap="onViewMoreFound">
+      <view class="stat-icon">🎁</view>
+      <view class="stat-info">
+        <view class="stat-value">{{stats.totalFound}}</view>
+        <view class="stat-label">拾获</view>
+      </view>
+    </view>
+    <view class="stat-card" bindtap="onViewMatch">
+      <view class="stat-icon">🔗</view>
+      <view class="stat-info">
+        <view class="stat-value">{{stats.totalMatched}}</view>
+        <view class="stat-label">匹配</view>
+      </view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-icon">✨</view>
+      <view class="stat-info">
+        <view class="stat-value">{{stats.recoveryRate}}%</view>
+        <view class="stat-label">找回率</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-section">
+    <view class="action-grid">
+      <view class="action-btn primary" bindtap="onPublishLost">
+        <view class="action-icon">📢</view>
+        <view class="action-text">发布失物</view>
+      </view>
+      <view class="action-btn success" bindtap="onPublishFound">
+        <view class="action-icon">🎯</view>
+        <view class="action-text">发布拾获</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最新失物 -->
+  <view class="list-section">
+    <view class="section-header">
+      <view class="section-title">
+        <text class="title-icon">📋</text>
+        <text class="title-text">最新失物</text>
+      </view>
+      <view class="section-more" bindtap="onViewMoreLost">
+        <text>更多</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    <scroll-view class="scroll-list" scroll-x wx:if="{{lostList.length > 0}}">
+      <view class="scroll-item" wx:for="{{lostList}}" wx:key="id" bindtap="onViewLostDetail" data-id="{{item.id}}">
+        <image class="scroll-image" src="{{item.images[0] || '/images/default.png'}}" mode="aspectFill" />
+        <view class="scroll-content">
+          <view class="scroll-title">{{item.title}}</view>
+          <view class="scroll-tags">
+            <text class="scroll-tag type">{{item.type}}</text>
+          </view>
+          <view class="scroll-location">📍 {{item.location}}</view>
+          <view class="scroll-footer">
+            <text class="scroll-time">{{item.lostTime}}</text>
+            <text class="scroll-reward" wx:if="{{item.reward > 0}}">¥{{item.reward}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无失物信息</text>
+    </view>
+  </view>
+
+  <!-- 最新拾获 -->
+  <view class="list-section">
+    <view class="section-header">
+      <view class="section-title">
+        <text class="title-icon">🎁</text>
+        <text class="title-text">最新拾获</text>
+      </view>
+      <view class="section-more" bindtap="onViewMoreFound">
+        <text>更多</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    <scroll-view class="scroll-list" scroll-x wx:if="{{foundList.length > 0}}">
+      <view class="scroll-item" wx:for="{{foundList}}" wx:key="id" bindtap="onViewFoundDetail" data-id="{{item.id}}">
+        <image class="scroll-image" src="{{item.images[0] || '/images/default.png'}}" mode="aspectFill" />
+        <view class="scroll-content">
+          <view class="scroll-title">{{item.title}}</view>
+          <view class="scroll-tags">
+            <text class="scroll-tag type">{{item.type}}</text>
+          </view>
+          <view class="scroll-location">📍 {{item.location}}</view>
+          <view class="scroll-footer">
+            <text class="scroll-time">{{item.foundTime}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无拾获信息</text>
+    </view>
+  </view>
+  </scroll-view>
+</view>

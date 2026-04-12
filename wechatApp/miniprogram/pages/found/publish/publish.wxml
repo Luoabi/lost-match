@@ -1,0 +1,96 @@
+<view class="container">
+  <form bindsubmit="onSubmit">
+    <view class="form-section">
+      <view class="section-title">📝 基本信息</view>
+      
+      <view class="form-item">
+        <view class="label required">标题</view>
+        <input class="input" placeholder="请输入拾获物品标题" value="{{form.title}}" bindinput="onInputChange" data-field="title" maxlength="50" placeholder-class="placeholder" />
+      </view>
+
+      <view class="form-item">
+        <view class="label required">物品类型</view>
+        <picker mode="selector" range="{{typeOptions}}" bindchange="onTypeChange" value="{{form.type}}">
+          <view class="picker">{{form.type || '请选择物品类型'}}</view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <view class="label required">详细描述</view>
+        <textarea class="textarea" placeholder="请详细描述拾获物品的特征、颜色、品牌等信息，帮助失主认领" value="{{form.description}}" bindinput="onInputChange" data-field="description" maxlength="500" placeholder-class="placeholder" />
+      </view>
+
+      <view class="form-item">
+        <view class="label">关键词</view>
+        <input class="input" placeholder="例如：黑色 苹果 钱包（空格分隔）" value="{{form.keywords}}" bindinput="onInputChange" data-field="keywords" placeholder-class="placeholder" />
+      </view>
+    </view>
+
+    <view class="form-section">
+      <view class="section-title">📷 图片信息</view>
+      
+      <view class="image-list">
+        <view class="image-item" wx:for="{{form.images}}" wx:key="index">
+          <image class="image" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-url="{{item}}" />
+          <view class="delete-btn" bindtap="deleteImage" data-index="{{index}}">×</view>
+        </view>
+        <view class="image-item add-btn" wx:if="{{form.images.length < 9}}" bindtap="chooseImage">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加图片</text>
+        </view>
+      </view>
+      <view class="tip">最多上传9张图片，清晰的照片有助于失主快速认领</view>
+    </view>
+
+    <view class="form-section">
+      <view class="section-title">📍 拾获信息</view>
+      
+      <view class="form-item">
+        <view class="label required">拾获地点</view>
+        <picker mode="selector" range="{{locationOptions}}" bindchange="onLocationChange">
+          <view class="picker">{{form.location || '请选择拾获地点'}}</view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <view class="label">详细地点</view>
+        <input class="input" placeholder="请输入详细地点或点击下方选择" value="{{form.locationDetail}}" bindinput="onInputChange" data-field="locationDetail" placeholder-class="placeholder" />
+      </view>
+
+      <view class="form-item">
+        <view class="label">地图位置</view>
+        <button class="location-btn" bindtap="chooseLocation" type="default" size="mini">
+          {{form.longitude && form.latitude ? '已选择位置' : '选择地图位置'}}
+        </button>
+        <view class="tip" wx:if="{{form.longitude && form.latitude}}">
+          经度: {{form.longitude}}, 纬度: {{form.latitude}}
+        </view>
+      </view>
+
+      <view class="form-item">
+        <view class="label required">拾获时间</view>
+        <picker mode="date" bindchange="onDateChange" value="{{form.foundTime}}">
+          <view class="picker">{{form.foundTime || '请选择拾获时间'}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-section">
+      <view class="section-title">📞 联系方式</view>
+      
+      <view class="form-item">
+        <view class="label required">联系人</view>
+        <input class="input" placeholder="请输入联系人姓名" value="{{form.contactName}}" bindinput="onInputChange" data-field="contactName" placeholder-class="placeholder" />
+      </view>
+
+      <view class="form-item">
+        <view class="label required">联系电话</view>
+        <input class="input" type="number" placeholder="请输入联系电话" value="{{form.contactPhone}}" bindinput="onInputChange" data-field="contactPhone" maxlength="11" placeholder-class="placeholder" />
+      </view>
+    </view>
+
+    <view class="submit-section">
+      <button class="submit-btn" formType="submit">{{isEdit ? '✨ 更新信息' : '🚀 立即发布'}}</button>
+    </view>
+  </form>
+</view>

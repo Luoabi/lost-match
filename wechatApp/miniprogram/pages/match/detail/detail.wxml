@@ -1,0 +1,90 @@
+<view class="container">
+  <view class="detail" wx:if="{{detail.id}}">
+    <!-- 匹配得分 -->
+    <view class="score-card">
+      <view class="total-score">{{detail.matchScore}}%</view>
+      <view class="score-label">综合匹配度</view>
+      <view class="score-details">
+        <view class="score-item">
+          <text class="score-name">图像相似度</text>
+          <text class="score-value">{{detail.imageScore}}%</text>
+        </view>
+        <view class="score-item">
+          <text class="score-name">位置匹配度</text>
+          <text class="score-value">{{detail.locationScore}}%</text>
+        </view>
+        <view class="score-item">
+          <text class="score-name">文本相似度</text>
+          <text class="score-value">{{detail.textScore}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 匹配状态 -->
+    <view class="status-card">
+      <view class="status-badge status-{{detail.status}}">{{detail.statusText}}</view>
+    </view>
+
+    <!-- 失物信息 -->
+    <view class="item-card">
+      <view class="card-title">
+        <text>失物信息</text>
+        <text class="view-detail" bindtap="goLostDetail">查看详情 ›</text>
+      </view>
+      <view class="item-images" wx:if="{{detail.lostItemImages && detail.lostItemImages.length > 0}}">
+        <image class="item-image" wx:for="{{detail.lostItemImages}}" wx:key="index" 
+               src="{{item}}" mode="aspectFill" 
+               bindtap="previewLostImage" data-url="{{item}}" />
+      </view>
+      <view class="item-title">{{detail.lostItemTitle}}</view>
+      <view class="item-info">
+        <text class="info-tag">{{detail.lostItemType}}</text>
+        <text class="info-tag">{{detail.lostItemLocation}}</text>
+      </view>
+      <view class="item-desc">{{detail.lostItemDescription}}</view>
+      <view class="item-time">丢失时间: {{detail.lostItemTime}}</view>
+    </view>
+
+    <!-- 拾获信息 -->
+    <view class="item-card">
+      <view class="card-title">
+        <text>拾获信息</text>
+        <text class="view-detail" bindtap="goFoundDetail">查看详情 ›</text>
+      </view>
+      <view class="item-images" wx:if="{{detail.foundItemImages && detail.foundItemImages.length > 0}}">
+        <image class="item-image" wx:for="{{detail.foundItemImages}}" wx:key="index" 
+               src="{{item}}" mode="aspectFill" 
+               bindtap="previewFoundImage" data-url="{{item}}" />
+      </view>
+      <view class="item-title">{{detail.foundItemTitle}}</view>
+      <view class="item-info">
+        <text class="info-tag">{{detail.foundItemType}}</text>
+        <text class="info-tag">{{detail.foundItemLocation}}</text>
+      </view>
+      <view class="item-desc">{{detail.foundItemDescription}}</view>
+      <view class="item-time">拾获时间: {{detail.foundItemTime}}</view>
+    </view>
+
+    <!-- 反馈 -->
+    <view class="feedback-card">
+      <view class="card-title">提交反馈</view>
+      <textarea class="feedback-textarea" 
+                placeholder="请输入您的反馈意见..." 
+                value="{{feedback}}" 
+                bindinput="onFeedbackInput" 
+                maxlength="500" />
+      <button class="submit-feedback-btn" bindtap="submitFeedback">提交反馈</button>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="actions" wx:if="{{detail.status === 0}}">
+      <button class="action-btn confirm-btn" bindtap="confirmMatch">确认匹配</button>
+      <button class="action-btn reject-btn" bindtap="rejectMatch">不是我的</button>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{!detail.id}}">
+    <text>加载中...</text>
+  </view>
+</view>

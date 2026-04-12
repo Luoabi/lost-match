@@ -1,0 +1,47 @@
+<view class="container">
+  <view class="register-box">
+    <view class="logo-section">
+      <view class="logo">📱</view>
+      <view class="title">校园失物追寻</view>
+      <view class="subtitle">注册新账号</view>
+    </view>
+
+    <view class="form-section">
+      <view class="form-item">
+        <view class="label">用户名</view>
+        <input class="input" placeholder="请输入用户名（4-20位）" value="{{form.username}}" bindinput="onInputChange" data-field="username" maxlength="20" />
+      </view>
+
+      <view class="form-item">
+        <view class="label">密码</view>
+        <input class="input" type="password" placeholder="请输入密码（6-20位）" value="{{form.password}}" bindinput="onInputChange" data-field="password" maxlength="20" />
+      </view>
+
+      <view class="form-item">
+        <view class="label">确认密码</view>
+        <input class="input" type="password" placeholder="请再次输入密码" value="{{form.confirmPassword}}" bindinput="onInputChange" data-field="confirmPassword" maxlength="20" />
+      </view>
+
+      <view class="form-item">
+        <view class="label">姓名</view>
+        <input class="input" placeholder="请输入真实姓名" value="{{form.name}}" bindinput="onInputChange" data-field="name" maxlength="20" />
+      </view>
+
+      <view class="form-item">
+        <view class="label">手机号</view>
+        <input class="input" type="number" placeholder="请输入手机号" value="{{form.phone}}" bindinput="onInputChange" data-field="phone" maxlength="11" />
+      </view>
+
+      <view class="form-item">
+        <view class="label">邮箱（选填）</view>
+        <input class="input" placeholder="请输入邮箱" value="{{form.email}}" bindinput="onInputChange" data-field="email" />
+      </view>
+
+      <button class="register-btn" bindtap="onRegister">注册</button>
+
+      <view class="footer">
+        <text class="link" bindtap="goLogin">已有账号？立即登录</text>
+      </view>
+    </view>
+  </view>
+</view>

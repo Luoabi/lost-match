@@ -1,0 +1,37 @@
+/**app.wxss**/
+page {
+  background: #F5F5F5;
+  height: 100%;
+}
+
+/* 全局容器样式 - 不要设置align-items: center */
+.container {
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+/* 通用样式 */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* 按钮样式重置 */
+button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: normal;
+}
+
+button::after {
+  border: none;
+} 

@@ -1,0 +1,94 @@
+<view class="container">
+  <!-- 我的模式提示 -->
+  <view class="mine-tip" wx:if="{{isMine}}">
+    <view class="tip-left">
+      <text class="tip-icon">👤</text>
+      <text class="tip-text">仅显示我发布的内容</text>
+    </view>
+    <view class="tip-right" bindtap="exitMineMode">
+      <text class="exit-text">退出</text>
+    </view>
+  </view>
+
+  <!-- 顶部Tab切换 -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'lost' ? 'active' : ''}}" bindtap="switchTab" data-tab="lost">
+      <text class="tab-text">{{isMine ? '我的失物' : '失物'}}</text>
+      <view class="tab-indicator" wx:if="{{activeTab === 'lost'}}"></view>
+    </view>
+    <view class="tab-item {{activeTab === 'found' ? 'active' : ''}}" bindtap="switchTab" data-tab="found">
+      <text class="tab-text">{{isMine ? '我的拾获' : '拾获'}}</text>
+      <view class="tab-indicator" wx:if="{{activeTab === 'found'}}"></view>
+    </view>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="{{activeTab === 'lost' ? '搜索失物...' : '搜索拾获物品...'}}" bindinput="onSearchInput" value="{{searchKeyword}}" />
+  </view>
+
+  <!-- 快速筛选行 -->
+  <scroll-view class="filter-row" scroll-x>
+    <view class="filter-item {{filterType === '' ? 'active' : ''}}" bindtap="selectType" data-type="">
+      全部
+    </view>
+    <view class="filter-item {{filterType === item ? 'active' : ''}}" 
+          wx:for="{{typeOptions}}" wx:key="index" wx:for-item="item"
+          bindtap="selectType" data-type="{{item}}">
+      {{item}}
+    </view>
+  </scroll-view>
+
+  <scroll-view class="filter-row status-row" scroll-x>
+    <view class="filter-item {{filterStatus === item.value ? 'active' : ''}}" 
+          wx:for="{{statusOptions}}" wx:key="value"
+          bindtap="selectStatus" data-status="{{item.value}}">
+      {{item.label}}
+    </view>
+  </scroll-view>
+
+  <!-- 列表 -->
+  <view class="list">
+    <view class="item" wx:for="{{list}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="item-image">
+        <image src="{{item.images[0] || '/images/default.png'}}" mode="aspectFill" />
+        <view class="status-badge status-{{item.status}}">{{item.statusText}}</view>
+      </view>
+      <view class="item-content">
+        <view class="item-title">{{item.title}}</view>
+        <view class="item-info">
+          <text class="type">{{item.type}}</text>
+          <text class="location">📍 {{item.location}}</text>
+        </view>
+        <view class="item-desc">{{item.description}}</view>
+        <view class="item-footer">
+          <text class="time">{{activeTab === 'lost' ? item.lostTime : item.foundTime}}</text>
+          <text class="reward" wx:if="{{activeTab === 'lost' && item.reward > 0}}">💰 ¥{{item.reward}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && list.length === 0}}">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text" wx:if="{{isMine}}">
+        {{activeTab === 'lost' ? '您还没有发布失物信息' : '您还没有发布拾获信息'}}
+      </text>
+      <text class="empty-text" wx:else>
+        {{activeTab === 'lost' ? '暂无失物信息' : '暂无拾获信息'}}
+      </text>
+      <button class="empty-btn" bindtap="goPublish" wx:if="{{isMine}}">
+        {{activeTab === 'lost' ? '发布失物' : '发布拾获'}}
+      </button>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{hasMore}}">加载更多...</view>
+    <view class="no-more" wx:if="{{!hasMore && list.length > 0}}">没有更多了</view>
+  </view>
+
+  <!-- 发布按钮 -->
+  <view class="fab" bindtap="goPublish">
+    <text class="fab-icon">+</text>
+  </view>
+</view>

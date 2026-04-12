@@ -1,0 +1,92 @@
+<view class="container">
+  <!-- 我的模式提示 -->
+  <view class="mine-tip" wx:if="{{isMine}}">
+    <view class="tip-left">
+      <text class="tip-icon">👤</text>
+      <text class="tip-text">仅显示与我相关的匹配记录</text>
+    </view>
+    <view class="tip-right" bindtap="exitMineMode">
+      <text class="exit-text">退出</text>
+    </view>
+  </view>
+
+  <view class="filter-bar">
+    <button class="filter-btn" bindtap="showFilter">筛选状态</button>
+  </view>
+
+  <view class="list">
+    <view class="match-card" wx:for="{{list}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="match-header">
+        <view class="match-score">
+          <text class="score-value">{{item.matchScore}}%</text>
+          <text class="score-label">匹配度</text>
+        </view>
+        <view class="status-badge status-{{item.status}}">{{item.statusText}}</view>
+      </view>
+
+      <view class="match-items">
+        <view class="item-box">
+          <view class="item-label">失物</view>
+          <image class="item-image" src="{{item.lostItemImage}}" mode="aspectFill" />
+          <view class="item-title">{{item.lostItemTitle}}</view>
+          <view class="item-location">{{item.lostItemLocation}}</view>
+        </view>
+
+        <view class="match-icon">⇄</view>
+
+        <view class="item-box">
+          <view class="item-label">拾获</view>
+          <image class="item-image" src="{{item.foundItemImage}}" mode="aspectFill" />
+          <view class="item-title">{{item.foundItemTitle}}</view>
+          <view class="item-location">{{item.foundItemLocation}}</view>
+        </view>
+      </view>
+
+      <view class="match-scores">
+        <view class="score-item">
+          <text class="score-name">图像</text>
+          <text class="score-num">{{item.imageScore}}%</text>
+        </view>
+        <view class="score-item">
+          <text class="score-name">位置</text>
+          <text class="score-num">{{item.locationScore}}%</text>
+        </view>
+        <view class="score-item">
+          <text class="score-name">文本</text>
+          <text class="score-num">{{item.textScore}}%</text>
+        </view>
+      </view>
+
+      <view class="match-time">匹配时间: {{item.matchTime}}</view>
+    </view>
+
+    <view class="empty" wx:if="{{!loading && list.length === 0}}">
+      <text class="empty-icon">🔗</text>
+      <text class="empty-text" wx:if="{{isMine}}">您还没有相关的匹配记录</text>
+      <text class="empty-text" wx:else>暂无匹配记录</text>
+      <text class="empty-hint" wx:if="{{isMine}}">发布失物或拾获后，系统会自动进行AI智能匹配</text>
+    </view>
+
+    <view class="load-more" wx:if="{{hasMore}}">加载更多...</view>
+    <view class="no-more" wx:if="{{!hasMore && list.length > 0}}">没有更多了</view>
+  </view>
+
+  <view class="filter-modal" wx:if="{{showFilterModal}}" bindtap="hideFilter">
+    <view class="filter-content" catchtap="stopPropagation">
+      <view class="filter-title">筛选状态</view>
+      
+      <view class="filter-options">
+        <view class="option {{filterStatus === item.value ? 'active' : ''}}" 
+              wx:for="{{statusOptions}}" wx:key="value"
+              bindtap="selectStatus" data-status="{{item.value}}">
+          {{item.label}}
+        </view>
+      </view>
+
+      <view class="filter-actions">
+        <button class="reset-btn" bindtap="resetFilter">重置</button>
+        <button class="confirm-btn" bindtap="confirmFilter">确定</button>
+      </view>
+    </view>
+  </view>
+</view>

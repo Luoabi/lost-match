@@ -1,0 +1,99 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 600rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 60rpx 40rpx;
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.1);
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.logo {
+  font-size: 100rpx;
+  margin-bottom: 20rpx;
+}
+
+.app-name {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 10rpx;
+}
+
+.app-slogan {
+  display: block;
+  font-size: 26rpx;
+  color: #909399;
+}
+
+.form-section {
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #F5F7FA;
+  border-radius: 10rpx;
+  padding: 0 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.input-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+
+.input {
+  flex: 1;
+  height: 80rpx;
+  font-size: 28rpx;
+}
+
+.login-btn {
+  width: 100%;
+  height: 90rpx;
+  line-height: 90rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border-radius: 45rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 20rpx;
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.3);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 30rpx;
+}
+
+.link {
+  font-size: 26rpx;
+  color: #667eea;
+}
+
+.tips {
+  text-align: center;
+  margin-top: 20rpx;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #C0C4CC;
+}

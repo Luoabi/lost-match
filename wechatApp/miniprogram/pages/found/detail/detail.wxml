@@ -1,0 +1,146 @@
+<view class="container">
+  <view class="detail" wx:if="{{detail.id}}">
+    <!-- 图片轮播 -->
+    <view class="images-section">
+      <swiper class="images-swiper" wx:if="{{detail.images && detail.images.length > 0}}" indicator-dots circular indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff">
+        <swiper-item wx:for="{{detail.images}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-url="{{item}}" />
+        </swiper-item>
+      </swiper>
+      <view class="image-count" wx:if="{{detail.images && detail.images.length > 1}}">
+        <text class="count-icon">📷</text>
+        <text>{{detail.images.length}}</text>
+      </view>
+    </view>
+
+    <!-- 基本信息卡片 -->
+    <view class="info-card main-card">
+      <view class="card-header">
+        <view class="title">{{detail.title}}</view>
+        <view class="tags">
+          <text class="tag type">{{detail.type}}</text>
+          <text class="tag status status-{{detail.status}}">{{detail.statusText}}</text>
+        </view>
+      </view>
+
+      <view class="desc-section">
+        <view class="section-label">
+          <text class="label-icon">📝</text>
+          <text>详细描述</text>
+        </view>
+        <view class="desc">{{detail.description}}</view>
+      </view>
+    </view>
+
+    <!-- 详细信息卡片 -->
+    <view class="info-card">
+      <view class="card-title">
+        <text class="title-icon">📍</text>
+        <text>详细信息</text>
+      </view>
+      <view class="info-list">
+        <view class="info-item">
+          <view class="item-icon">📌</view>
+          <view class="item-content">
+            <text class="item-label">拾获地点</text>
+            <text class="item-value">{{detail.location}}</text>
+          </view>
+        </view>
+        <view class="info-item">
+          <view class="item-icon">🕐</view>
+          <view class="item-content">
+            <text class="item-label">拾获时间</text>
+            <text class="item-value">{{detail.foundTime}}</text>
+          </view>
+        </view>
+        <view class="info-item" wx:if="{{detail.keywords}}">
+          <view class="item-icon">🔖</view>
+          <view class="item-content">
+            <text class="item-label">关键词</text>
+            <text class="item-value">{{detail.keywords}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系方式卡片 -->
+    <view class="info-card contact-card">
+      <view class="card-title">
+        <text class="title-icon">📞</text>
+        <text>联系方式</text>
+      </view>
+      <view class="contact-list">
+        <view class="contact-item">
+          <view class="contact-icon">👤</view>
+          <view class="contact-info">
+            <text class="contact-label">联系人</text>
+            <text class="contact-value">{{detail.contactName}}</text>
+          </view>
+        </view>
+        <view class="contact-item">
+          <view class="contact-icon">📱</view>
+          <view class="contact-info">
+            <text class="contact-label">联系电话</text>
+            <text class="contact-value">{{detail.contactPhone}}</text>
+          </view>
+          <button class="call-btn" bindtap="makeCall">
+            <text class="btn-icon">📞</text>
+            <text>拨打</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 匹配推荐卡片 -->
+    <view class="info-card match-card" wx:if="{{matches.length > 0}}">
+      <view class="card-title">
+        <text class="title-icon">🔗</text>
+        <text>可能的匹配</text>
+        <view class="match-badge">{{matches.length}}</view>
+      </view>
+      <view class="match-list">
+        <view class="match-item" wx:for="{{matches}}" wx:key="id" bindtap="goMatchDetail" data-id="{{item.id}}">
+          <image class="match-image" src="{{item.lostItemImage}}" mode="aspectFill" />
+          <view class="match-info">
+            <view class="match-title">{{item.lostItemTitle}}</view>
+            <view class="match-meta">
+              <text class="match-location">📍 {{item.lostItemLocation}}</text>
+            </view>
+            <view class="match-score-bar">
+              <view class="score-label">匹配度</view>
+              <view class="score-progress">
+                <view class="score-fill" style="width: {{item.matchScore}}%"></view>
+              </view>
+              <view class="score-value">{{item.matchScore}}%</view>
+            </view>
+          </view>
+          <text class="match-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="actions" wx:if="{{isOwner}}">
+      <button class="action-btn primary" wx:if="{{detail.status === 1}}" bindtap="markAsReturned">
+        <text class="btn-icon">✅</text>
+        <text>标记为已归还</text>
+      </button>
+      <view class="action-row">
+        <button class="action-btn secondary" bindtap="editItem">
+          <text class="btn-icon">✏️</text>
+          <text>编辑</text>
+        </button>
+        <button class="action-btn danger" bindtap="deleteItem">
+          <text class="btn-icon">🗑️</text>
+          <text>删除</text>
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{!detail.id}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

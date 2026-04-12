@@ -1,0 +1,279 @@
+.container {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 100rpx;
+}
+
+.search-bar {
+  display: flex;
+  padding: 20rpx;
+  background: #fff;
+  margin-bottom: 20rpx;
+}
+
+.search-input {
+  flex: 1;
+  height: 70rpx;
+  padding: 0 20rpx;
+  background: #F5F5F5;
+  border-radius: 35rpx;
+  font-size: 28rpx;
+}
+
+.filter-btn {
+  width: 120rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  margin-left: 20rpx;
+  background: #4A90E2;
+  color: #fff;
+  border-radius: 35rpx;
+  font-size: 28rpx;
+  padding: 0;
+}
+
+.filter-tags {
+  display: flex;
+  padding: 0 20rpx 20rpx;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 10rpx 20rpx;
+  background: #E8F4FF;
+  color: #4A90E2;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  margin-right: 20rpx;
+  margin-bottom: 10rpx;
+}
+
+.tag .close {
+  margin-left: 10rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.list {
+  padding: 0 20rpx;
+}
+
+.item {
+  display: flex;
+  background: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+}
+
+.item-image {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  flex-shrink: 0;
+}
+
+.item-image image {
+  width: 100%;
+  height: 100%;
+}
+
+.status-badge {
+  position: absolute;
+  top: 10rpx;
+  left: 10rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  font-size: 20rpx;
+  color: #fff;
+}
+
+.status-0 { background: #E6A23C; }
+.status-1 { background: #67C23A; }
+.status-2 { background: #909399; }
+.status-3 { background: #F56C6C; }
+
+.item-content {
+  flex: 1;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.item-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-info {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 10rpx;
+}
+
+.item-info .type,
+.item-info .location {
+  font-size: 24rpx;
+  color: #909399;
+  padding: 4rpx 12rpx;
+  background: #F5F5F5;
+  border-radius: 4rpx;
+}
+
+.item-desc {
+  font-size: 26rpx;
+  color: #606266;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 10rpx;
+}
+
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 24rpx;
+  color: #909399;
+}
+
+.reward {
+  color: #F56C6C;
+  font-weight: bold;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+}
+
+.empty-image {
+  width: 300rpx;
+  height: 300rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #909399;
+}
+
+.load-more,
+.no-more {
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 28rpx;
+  color: #909399;
+}
+
+.filter-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.filter-content {
+  width: 100%;
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 20rpx 20rpx 0 0;
+  padding: 40rpx;
+}
+
+.filter-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.filter-section {
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.option {
+  padding: 15rpx 30rpx;
+  background: #F5F5F5;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #606266;
+}
+
+.option.active {
+  background: #4A90E2;
+  color: #fff;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 40rpx;
+}
+
+.reset-btn,
+.confirm-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+}
+
+.reset-btn {
+  background: #F5F5F5;
+  color: #606266;
+}
+
+.confirm-btn {
+  background: #4A90E2;
+  color: #fff;
+}
+
+.fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: #4A90E2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(74, 144, 226, 0.4);
+  z-index: 100;
+}
+
+.fab-icon {
+  font-size: 60rpx;
+  color: #fff;
+  line-height: 1;
+}
