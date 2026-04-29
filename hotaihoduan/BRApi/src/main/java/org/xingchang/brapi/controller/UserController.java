@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.xingchang.brapi.common.PageResult;
 import org.xingchang.brapi.common.Result;
+import org.xingchang.brapi.dto.ChangePasswordRequest;
 import org.xingchang.brapi.dto.LoginRequest;
 import org.xingchang.brapi.dto.LoginResponse;
 import org.xingchang.brapi.entity.User;
@@ -115,6 +116,28 @@ public class UserController {
     public Result<Void> batchDeleteUsers(@RequestBody List<Long> ids) {
         try {
             userService.batchDeleteUsers(ids);
+            return Result.success(null);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+    
+    @Operation(summary = "更新个人信息", description = "用户更新自己的个人信息")
+    @PutMapping("/profile")
+    public Result<User> updateProfile(@Valid @RequestBody User user) {
+        try {
+            User updatedUser = userService.updateProfile(user);
+            return Result.success(updatedUser);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+    
+    @Operation(summary = "修改密码", description = "用户修改自己的密码")
+    @PutMapping("/change-password")
+    public Result<Void> changePassword(@RequestBody ChangePasswordRequest request) {
+        try {
+            userService.changePassword(request);
             return Result.success(null);
         } catch (Exception e) {
             return Result.error(e.getMessage());

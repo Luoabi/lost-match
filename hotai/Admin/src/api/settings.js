@@ -111,7 +111,6 @@ export async function getSystemConfig() {
       data: {
         // 基础设置
         siteName: basicRes.data.siteName || '校园失物追寻平台',
-        logo: basicRes.data.logo || '',
         phone: basicRes.data.phone || '',
         email: basicRes.data.email || '',
         // 匹配算法
@@ -133,7 +132,6 @@ export async function getSystemConfig() {
     return {
       data: {
         siteName: '校园失物追寻平台',
-        logo: '',
         phone: '',
         email: '',
         imageWeight: 0.4,

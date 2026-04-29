@@ -216,4 +216,72 @@ public class UserService {
     public void batchDeleteUsers(List<Long> ids) {
         userRepository.deleteAllById(ids);
     }
+    
+    /**
+     * 更新个人信息
+     */
+    @Transactional
+    public User updateProfile(User user) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
+        
+        // 只允许更新部分字段
+        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+            // 检查用户名是否被其他用户占用
+            Optional<User> userWithSameUsername = userRepository.findByUsername(user.getUsername());
+            if (userWithSameUsername.isPresent() && !userWithSameUsername.get().getId().equals(user.getId())) {
+                throw new RuntimeException("用户名已被占用");
+            }
+            existingUser.setUsername(user.getUsername());
+        }
+        
+        if (user.getEmail() != null) {
+            existingUser.setEmail(user.getEmail());
+        }
+        
+        if (user.getPhone() != null) {
+            // 检查手机号是否被其他用户占用
+            if (!user.getPhone().isEmpty()) {
+                Optional<User> userWithSamePhone = userRepository.findByPhone(user.getPhone());
+                if (userWithSamePhone.isPresent() && !userWithSamePhone.get().getId().equals(user.getId())) {
+                    throw new RuntimeException("手机号已被占用");
+                }
+            }
+            existingUser.setPhone(user.getPhone());
+        }
+        
+        if (user.getAvatar() != null) {
+            existingUser.setAvatar(user.getAvatar());
+        }
+        
+        existingUser.setUpdateTime(LocalDateTime.now());
+        
+        return userRepository.save(existingUser);
+    }
+    
+    /**
+     * 修改密码
+     */
+    @Transactional
+    public void changePassword(org.xingchang.brapi.dto.ChangePasswordRequest request) {
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
+        
+        // 验证原密码
+        String encryptedOldPassword = DigestUtil.md5Hex(request.getOldPassword());
+        if (!encryptedOldPassword.equals(user.getPassword())) {
+            throw new RuntimeException("原密码错误");
+        }
+        
+        // 验证新密码长度
+        if (request.getNewPassword().length() < 6) {
+            throw new RuntimeException("新密码长度不能少于6位");
+        }
+        
+        // 更新密码
+        user.setPassword(DigestUtil.md5Hex(request.getNewPassword()));
+        user.setUpdateTime(LocalDateTime.now());
+        
+        userRepository.save(user);
+    }
 }

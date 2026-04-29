@@ -11,17 +11,7 @@
             <el-form-item label="网站名称">
               <el-input v-model="basicForm.siteName" placeholder="请输入网站名称" />
             </el-form-item>
-            <el-form-item label="网站Logo">
-              <el-upload
-                class="logo-uploader"
-                action="#"
-                :show-file-list="false"
-                :auto-upload="false"
-              >
-                <img v-if="basicForm.logo" :src="basicForm.logo" class="logo" />
-                <el-icon v-else class="logo-uploader-icon"><Plus /></el-icon>
-              </el-upload>
-            </el-form-item>
+
             <el-form-item label="联系电话">
               <el-input v-model="basicForm.phone" placeholder="请输入联系电话" />
             </el-form-item>
@@ -229,7 +219,6 @@ import {
 // 基础设置
 const basicForm = reactive({
   siteName: '校园失物追寻平台',
-  logo: 'https://via.placeholder.com/100',
   phone: '400-123-4567',
   email: 'support@example.com'
 })
@@ -547,34 +536,6 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.logo-uploader {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
-}
-
-.logo-uploader:hover {
-  border-color: #409EFF;
-}
-
-.logo-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 100px;
-  height: 100px;
-  text-align: center;
-  line-height: 100px;
-}
-
-.logo {
-  width: 100px;
-  height: 100px;
-  display: block;
 }
 
 .form-tip {

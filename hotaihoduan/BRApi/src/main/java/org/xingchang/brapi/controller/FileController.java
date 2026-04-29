@@ -33,8 +33,9 @@ public class FileController {
     
     @Operation(summary = "单文件上传")
     @PostMapping("/upload")
-    public Result<String> uploadFile(
-            @Parameter(description = "文件") @RequestParam("file") MultipartFile file) {
+    public Result<FileUploadResponse> uploadFile(
+            @Parameter(description = "文件") @RequestParam("file") MultipartFile file,
+            HttpServletRequest request) {
         try {
             if (file.isEmpty()) {
                 return Result.error("文件不能为空");
@@ -45,11 +46,23 @@ public class FileController {
             System.out.println("文件名: " + file.getOriginalFilename());
             System.out.println("文件大小: " + file.getSize());
             
-            String url = saveFile(file);
+            String relativePath = saveFile(file);
             
-            System.out.println("文件保存成功，URL: " + url);
+            // 构建完整的访问URL
+            String baseUrl = getBaseUrl(request);
+            String fullUrl = baseUrl + relativePath;
             
-            return Result.success(url);
+            System.out.println("文件保存成功");
+            System.out.println("相对路径: " + relativePath);
+            System.out.println("完整URL: " + fullUrl);
+            
+            FileUploadResponse response = new FileUploadResponse();
+            response.setUrl(fullUrl);
+            response.setRelativePath(relativePath);
+            response.setFilename(file.getOriginalFilename());
+            response.setSize(file.getSize());
+            
+            return Result.success(response);
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("文件上传失败：" + e.getMessage());
@@ -58,19 +71,29 @@ public class FileController {
     
     @Operation(summary = "多文件上传")
     @PostMapping("/upload-multiple")
-    public Result<List<String>> uploadMultipleFiles(
-            @Parameter(description = "文件列表") @RequestParam("files") MultipartFile[] files) {
+    public Result<List<FileUploadResponse>> uploadMultipleFiles(
+            @Parameter(description = "文件列表") @RequestParam("files") MultipartFile[] files,
+            HttpServletRequest request) {
         try {
-            List<String> urls = new ArrayList<>();
+            List<FileUploadResponse> responses = new ArrayList<>();
+            String baseUrl = getBaseUrl(request);
             
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
-                    String url = saveFile(file);
-                    urls.add(url);
+                    String relativePath = saveFile(file);
+                    String fullUrl = baseUrl + relativePath;
+                    
+                    FileUploadResponse response = new FileUploadResponse();
+                    response.setUrl(fullUrl);
+                    response.setRelativePath(relativePath);
+                    response.setFilename(file.getOriginalFilename());
+                    response.setSize(file.getSize());
+                    
+                    responses.add(response);
                 }
             }
             
-            return Result.success(urls);
+            return Result.success(responses);
         } catch (Exception e) {
             return Result.error("文件上传失败：" + e.getMessage());
         }
@@ -178,7 +201,69 @@ public class FileController {
         Path filePath = Paths.get(dirPath, newFilename);
         Files.write(filePath, file.getBytes());
         
-        // 返回访问URL（包含 /api 前缀，因为 context-path 是 /api）
+        // 返回相对路径（用于静态资源访问）
         return "/api/uploads/" + dateDir + "/" + newFilename;
+    }
+    
+    /**
+     * 获取基础URL
+     */
+    private String getBaseUrl(HttpServletRequest request) {
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        
+        StringBuilder baseUrl = new StringBuilder();
+        baseUrl.append(scheme).append("://").append(serverName);
+        
+        // 只有非标准端口才添加端口号
+        if ((scheme.equals("http") && serverPort != 80) || 
+            (scheme.equals("https") && serverPort != 443)) {
+            baseUrl.append(":").append(serverPort);
+        }
+        
+        return baseUrl.toString();
+    }
+    
+    /**
+     * 文件上传响应类
+     */
+    public static class FileUploadResponse {
+        private String url;           // 完整访问URL
+        private String relativePath;  // 相对路径
+        private String filename;      // 原始文件名
+        private Long size;           // 文件大小
+        
+        public String getUrl() {
+            return url;
+        }
+        
+        public void setUrl(String url) {
+            this.url = url;
+        }
+        
+        public String getRelativePath() {
+            return relativePath;
+        }
+        
+        public void setRelativePath(String relativePath) {
+            this.relativePath = relativePath;
+        }
+        
+        public String getFilename() {
+            return filename;
+        }
+        
+        public void setFilename(String filename) {
+            this.filename = filename;
+        }
+        
+        public Long getSize() {
+            return size;
+        }
+        
+        public void setSize(Long size) {
+            this.size = size;
+        }
     }
 }

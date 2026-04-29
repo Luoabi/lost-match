@@ -55,6 +55,102 @@
         </template>
       </el-dropdown>
     </div>
+    
+    <!-- 个人中心弹窗 -->
+    <el-dialog
+      v-model="profileDialogVisible"
+      title="个人中心"
+      width="600px"
+      :close-on-click-modal="false"
+    >
+      <el-tabs v-model="activeTab">
+        <!-- 个人信息 -->
+        <el-tab-pane label="个人信息" name="info">
+          <el-form :model="profileForm" label-width="100px" style="padding: 20px 20px 0">
+            <el-form-item label="头像">
+              <el-upload
+                class="avatar-uploader"
+                action="#"
+                :show-file-list="false"
+                :auto-upload="false"
+                :on-change="handleAvatarChange"
+                accept="image/*"
+              >
+                <img v-if="profileForm.avatar" :src="profileForm.avatar" class="avatar-preview" />
+                <div v-else class="avatar-placeholder">
+                  <el-icon><User /></el-icon>
+                  <div class="upload-text">点击上传头像</div>
+                </div>
+              </el-upload>
+              <div class="form-tip">支持jpg、png格式，建议尺寸100x100px，大小不超过2MB</div>
+            </el-form-item>
+            <el-form-item label="用户名">
+              <el-input v-model="profileForm.username" placeholder="请输入用户名" />
+            </el-form-item>
+            <el-form-item label="邮箱">
+              <el-input v-model="profileForm.email" placeholder="请输入邮箱" />
+            </el-form-item>
+            <el-form-item label="手机号">
+              <el-input v-model="profileForm.phone" placeholder="请输入手机号" />
+            </el-form-item>
+            <el-form-item label="角色">
+              <el-tag>{{ userInfo?.role === 'admin' ? '管理员' : '普通用户' }}</el-tag>
+            </el-form-item>
+            <el-form-item label="注册时间">
+              <span>{{ userInfo?.createTime || '-' }}</span>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        
+        <!-- 修改密码 -->
+        <el-tab-pane label="修改密码" name="password">
+          <el-form :model="passwordForm" label-width="100px" style="padding: 20px 20px 0">
+            <el-form-item label="原密码">
+              <el-input
+                v-model="passwordForm.oldPassword"
+                type="password"
+                placeholder="请输入原密码"
+                show-password
+              />
+            </el-form-item>
+            <el-form-item label="新密码">
+              <el-input
+                v-model="passwordForm.newPassword"
+                type="password"
+                placeholder="请输入新密码（至少6位）"
+                show-password
+              />
+            </el-form-item>
+            <el-form-item label="确认密码">
+              <el-input
+                v-model="passwordForm.confirmPassword"
+                type="password"
+                placeholder="请再次输入新密码"
+                show-password
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-alert
+                title="密码修改后需要重新登录"
+                type="warning"
+                :closable="false"
+                show-icon
+              />
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+      
+      <template #footer>
+        <el-button @click="profileDialogVisible = false">取消</el-button>
+        <el-button v-if="activeTab === 'info'" type="primary" @click="handleSaveProfile">
+          保存信息
+        </el-button>
+        <el-button v-if="activeTab === 'password'" type="primary" @click="handleChangePassword">
+          修改密码
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -107,6 +203,139 @@ const refreshPage = () => {
   window.location.reload()
 }
 
+// 个人中心弹窗
+const profileDialogVisible = ref(false)
+const profileForm = ref({
+  username: '',
+  email: '',
+  phone: '',
+  avatar: ''
+})
+const passwordForm = ref({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+const activeTab = ref('info')
+
+const openProfileDialog = () => {
+  profileForm.value = {
+    username: userInfo.value?.username || '',
+    email: userInfo.value?.email || '',
+    phone: userInfo.value?.phone || '',
+    avatar: userInfo.value?.avatar || ''
+  }
+  activeTab.value = 'info'
+  profileDialogVisible.value = true
+}
+
+const handleAvatarChange = async (file) => {
+  const isImage = file.raw.type.startsWith('image/')
+  const isLt2M = file.raw.size / 1024 / 1024 < 2
+
+  if (!isImage) {
+    ElMessage.error('只能上传图片文件!')
+    return
+  }
+  if (!isLt2M) {
+    ElMessage.error('图片大小不能超过 2MB!')
+    return
+  }
+
+  try {
+    // 这里需要导入 uploadFile API
+    const { uploadFile } = await import('@/api/file')
+    const res = await uploadFile(file.raw)
+    
+    console.log('=== 文件上传响应 ===')
+    console.log('完整响应:', res)
+    console.log('res.data:', res.data)
+    console.log('res.data.url:', res.data.url)
+    console.log('==================')
+    
+    if (res.code === 200) {
+      profileForm.value.avatar = res.data.url
+      console.log('设置的avatar值:', profileForm.value.avatar)
+      ElMessage.success('头像上传成功')
+    } else {
+      ElMessage.error(res.message || '头像上传失败')
+    }
+  } catch (error) {
+    console.error('头像上传失败', error)
+    ElMessage.error('头像上传失败')
+  }
+}
+
+const handleSaveProfile = async () => {
+  try {
+    console.log('=== 保存个人信息 ===')
+    console.log('profileForm.value.avatar:', profileForm.value.avatar)
+    
+    const { updateUserProfile } = await import('@/api/user')
+    const result = await updateUserProfile({
+      id: userInfo.value.id,
+      username: profileForm.value.username,
+      email: profileForm.value.email,
+      phone: profileForm.value.phone,
+      avatar: profileForm.value.avatar
+    })
+    
+    console.log('保存结果:', result)
+    console.log('==================')
+    
+    // 更新本地用户信息
+    await userStore.getUserInfo()
+    ElMessage.success('个人信息更新成功')
+    profileDialogVisible.value = false
+  } catch (error) {
+    console.error('更新失败:', error)
+    ElMessage.error('更新失败')
+  }
+}
+
+const handleChangePassword = async () => {
+  if (!passwordForm.value.oldPassword) {
+    ElMessage.warning('请输入原密码')
+    return
+  }
+  if (!passwordForm.value.newPassword) {
+    ElMessage.warning('请输入新密码')
+    return
+  }
+  if (passwordForm.value.newPassword.length < 6) {
+    ElMessage.warning('新密码长度不能少于6位')
+    return
+  }
+  if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
+    ElMessage.warning('两次输入的密码不一致')
+    return
+  }
+
+  try {
+    const { changePassword } = await import('@/api/user')
+    await changePassword({
+      id: userInfo.value.id,
+      oldPassword: passwordForm.value.oldPassword,
+      newPassword: passwordForm.value.newPassword
+    })
+    
+    ElMessage.success('密码修改成功，请重新登录')
+    passwordForm.value = {
+      oldPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    }
+    
+    // 延迟退出登录
+    setTimeout(() => {
+      userStore.logout()
+      router.push('/login')
+    }, 1500)
+  } catch (error) {
+    ElMessage.error(error.message || '密码修改失败')
+  }
+}
+
 const handleCommand = (command) => {
   if (command === 'logout') {
     ElMessageBox.confirm('确定要退出登录吗？', '提示', {
@@ -119,7 +348,7 @@ const handleCommand = (command) => {
       ElMessage.success('退出成功')
     }).catch(() => {})
   } else if (command === 'profile') {
-    ElMessage.info('个人中心功能开发中')
+    openProfileDialog()
   } else if (command === 'settings') {
     router.push('/settings')
   }
@@ -264,5 +493,70 @@ const handleCommand = (command) => {
   .icon-btn:not(.hamburger) {
     display: none;
   }
+}
+
+/* 个人中心弹窗样式 */
+.avatar-uploader {
+  display: inline-block;
+}
+
+.avatar-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #dcdfe6;
+  transition: all 0.3s;
+}
+
+.avatar-preview:hover {
+  border-color: #409EFF;
+  transform: scale(1.05);
+}
+
+.avatar-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px dashed #dcdfe6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #fafafa;
+}
+
+.avatar-placeholder:hover {
+  border-color: #409EFF;
+  background: #f0f9ff;
+}
+
+.avatar-placeholder .el-icon {
+  font-size: 32px;
+  color: #8c939d;
+  margin-bottom: 5px;
+}
+
+.upload-text {
+  font-size: 12px;
+  color: #8c939d;
+}
+
+.form-tip {
+  margin-top: 8px;
+  color: #909399;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+:deep(.el-dialog__body) {
+  padding: 20px 20px 10px;
+}
+
+:deep(.el-tabs__content) {
+  overflow: visible;
 }
 </style>

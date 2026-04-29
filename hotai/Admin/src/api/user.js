@@ -60,3 +60,21 @@ export function batchDeleteUsers(ids) {
     data: ids
   })
 }
+
+// 更新个人信息
+export function updateUserProfile(data) {
+  return request({
+    url: '/user/profile',
+    method: 'put',
+    data
+  })
+}
+
+// 修改密码
+export function changePassword(data) {
+  return request({
+    url: '/user/change-password',
+    method: 'put',
+    data
+  })
+}
